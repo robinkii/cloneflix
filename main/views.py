@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import User, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
+from .models import CustomUser, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
 from .serializers import UserSerializer, ProfileSerializer, GenreSerializer, ShowSerializer, EpisodeSerializer, MovieSerializer, ReviewSerializer, SubscriptionTypeSerializer, SubscriptionSerializer, ViewingHistorySerializer, WatchlistSerializer
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
 class ProfileViewSet(viewsets.ModelViewSet):

@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import User, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
+from .models import CustomUser, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = '__all__'
 
 class ProfileSerializer(serializers.ModelSerializer):

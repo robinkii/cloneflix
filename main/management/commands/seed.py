@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
 import random
-from main.models import User, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
+from main.models import CustomUser, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
 
 class Command(BaseCommand):
     help = 'Seed database with fake data'
@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         # Create users and profiles
         for _ in range(10):
-            user = User.objects.create(
+            user = CustomUser.objects.create(
                 email=fake.email(),
                 username=fake.user_name(),
                 password_hash=fake.password()

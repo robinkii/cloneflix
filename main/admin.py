@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import User, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
+from .models import CustomUser, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
 
 # Register your models here.
-admin.site.register(User)
+admin.site.register(CustomUser)
 admin.site.register(Profile)
 admin.site.register(Genre)
 admin.site.register(Show)
