@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+
+from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
 
 env_path = Path('.') / '.env'
@@ -102,6 +104,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'main.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
