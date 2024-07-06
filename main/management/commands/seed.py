@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
 import random
-from main.models import User, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
+from main.models import CustomUser, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
 
 class Command(BaseCommand):
     help = 'Seed database with fake data'
@@ -16,11 +16,13 @@ class Command(BaseCommand):
 
         # Create users and profiles
         for _ in range(10):
-            user = User.objects.create(
+            user = CustomUser.objects.create(
                 email=fake.email(),
-                username=fake.user_name(),
-                password_hash=fake.password()
+                username=fake.user_name()
             )
+            user.set_password(fake.password())  # Hash the password
+            user.save()
+
             Profile.objects.create(
                 user=user,
                 profile_name=fake.name(),
@@ -67,5 +69,57 @@ class Command(BaseCommand):
             # Assign random genres to movie
             for genre in Genre.objects.order_by('?')[:random.randint(1, 3)]:
                 movie.genres.add(genre)
+
+        # Create subscription types
+        subscription_types = ['Basic', 'Standard', 'Premium']
+        for st in subscription_types:
+            SubscriptionType.objects.create(label=st)
+
+        # Create subscriptions
+        for user in CustomUser.objects.all():
+            Subscription.objects.create(
+                user=user,
+                start_date=fake.date_this_year(),
+                end_date=fake.date_this_year(),
+                cost=random.uniform(10.0, 100.0),
+                type=SubscriptionType.objects.order_by('?').first()
+            )
+
+        # Create reviews
+        for user in CustomUser.objects.all():
+            for _ in range(5):
+                Review.objects.create(
+                    user=user,
+                    movie=Movie.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    show=Show.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    episode=Episode.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    rating=random.uniform(1.0, 10.0),
+                    review_text=fake.text(),
+                    created_at=fake.date_time_this_year()
+                )
+
+        # Create viewing histories
+        for user in CustomUser.objects.all():
+            for _ in range(10):
+                ViewingHistory.objects.create(
+                    user=user,
+                    movie=Movie.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    show=Show.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    episode=Episode.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    watched_on=fake.date_this_year()
+                )
+
+        # Create watchlists
+        for user in CustomUser.objects.all():
+            profile = Profile.objects.filter(user=user).first()
+            for _ in range(10):
+                Watchlist.objects.create(
+                    user=user,
+                    profile=profile,
+                    movie=Movie.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    show=Show.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    episode=Episode.objects.order_by('?').first() if random.choice([True, False]) else None,
+                    date_added=fake.date_this_year()
+                )
 
         self.stdout.write(self.style.SUCCESS('Successfully seeded the database'))

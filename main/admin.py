@@ -1,8 +1,30 @@
 from django.contrib import admin
-from .models import User, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
+from django.contrib.auth.admin import UserAdmin
+from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .models import CustomUser, Profile, Genre, Show, Episode, Movie, Review, SubscriptionType, Subscription, ViewingHistory, Watchlist
 
 # Register your models here.
-admin.site.register(User)
+class CustomUserAdmin(UserAdmin):
+    add_form = CustomUserCreationForm
+    form = CustomUserChangeForm
+    model = CustomUser
+    list_display = ['username', 'email','is_staff', 'is_active']
+    list_filter = ['is_staff', 'is_active']
+    fieldsets = (
+        (None, {'fields': ('username', 'email', 'password')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active')}),
+    )
+    add_fieldsets = (
+        (None,{
+         'classes': ('wide',),
+         'fields': ('username', 'email', 'pass', 'password2', 'is_staff', 'is_active')
+        }
+         ),
+    )
+    search_fields = ('username', 'email')
+    ordering = ('email',)
+
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Profile)
 admin.site.register(Genre)
 admin.site.register(Show)

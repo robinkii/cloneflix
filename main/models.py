@@ -1,19 +1,20 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .managers import CustomUserManager
 
 # User model
-class User(models.Model):
+class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=50, unique=True)
-    password_hash = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = CustomUserManager()
 
     def __str__(self):
         return self.username
 
 # Profile model
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     profile_name = models.CharField(max_length=50)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -72,7 +73,7 @@ class Movie(models.Model):
 
 # Review model
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, null=True, blank=True)
     show = models.ForeignKey(Show, on_delete=models.CASCADE, null=True, blank=True)
     episode = models.ForeignKey(Episode, on_delete=models.CASCADE, null=True, blank=True)
@@ -99,7 +100,7 @@ class SubscriptionType(models.Model):
 
 # Subscription model
 class Subscription(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
     cost = models.FloatField()
@@ -110,7 +111,7 @@ class Subscription(models.Model):
 
 # ViewingHistory model
 class ViewingHistory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, null=True, blank=True)
     show = models.ForeignKey(Show, on_delete=models.CASCADE, null=True, blank=True)
     episode = models.ForeignKey(Episode, on_delete=models.CASCADE, null=True, blank=True)
@@ -121,7 +122,7 @@ class ViewingHistory(models.Model):
 
 # Watchlist model
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, null=True, blank=True)
     show = models.ForeignKey(Show, on_delete=models.CASCADE, null=True, blank=True)
